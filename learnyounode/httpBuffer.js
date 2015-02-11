@@ -9,7 +9,7 @@
     http.get(url, function(res) {
         res.pipe(bl(function (err, data) {
             if (err){
-                return console.error(err);
+                console.error(err);
             }
 
             console.log(data.length);

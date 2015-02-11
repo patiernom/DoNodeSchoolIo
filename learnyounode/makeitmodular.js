@@ -10,7 +10,7 @@ var modularDir = require('./modules/getFilteredList.js'),
         }
 
         data.forEach(function(file){
-            console.log(filename);
+            console.log(file);
         })
     };
 
