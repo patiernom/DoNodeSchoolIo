@@ -5,35 +5,34 @@
     var offset = 2,
         numberOfUrls = 3,
         http = require('http'),
-        urls = (function(){
-            var arr = [],
-                i = 0;
-
-            for (; i < numberOfUrls; i+=1) {
-                arr[i] = process.argv[offset + i];
-            }
-
-            return arr;
-        })(),
+        getUrl = function(i){
+            return process.argv[i];
+        },
         bl = require('bl'),
         count = 0,
-        perform = function(){
+        perform = function(url){
             return (function (){
-                http.get(urls[count], function(res) {
+                http.get(url, function(res) {
                     res.pipe(bl(function (err, data) {
                         if (err){
                             console.error(err);
                         }
 
-                        if (count < numberOfUrls){
-                            count+=1;
-                            console.log(data.toString());
-                            perform(urls[count]);
-                        }
+                        printResult(data.toString());
                     }))
                 });
             })();
+        },
+        getIndex = function(){
+            return offset + count;
+        },
+        printResult = function(result){
+            if (count < numberOfUrls){
+                count+=1;
+                console.log(result);
+                perform(getUrl(getIndex()));
+            }
         };
 
-    perform();
+    perform(getUrl(getIndex()));
 }());
