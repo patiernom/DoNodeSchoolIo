@@ -2,14 +2,14 @@
  * Created by Marco on 11/02/2015.
  */
 (function(){
-    var offset = 2,
+    var http = require('http'),
+        bl = require('bl'),
+        offset = 2,
         numberOfUrls = 3,
-        http = require('http'),
+        count = 0,
         getUrl = function(i){
             return process.argv[i];
         },
-        bl = require('bl'),
-        count = 0,
         perform = function(url){
             return (function (){
                 http.get(url, function(res) {
