@@ -1,0 +1,16 @@
+{
+  "name": "makemehapi",
+  "version": "0.0.0",
+  "description": "",
+  "main": "hallohapi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "handlebars": "^3.0.2",
+    "hapi": "^8.4.0",
+    "rot13-transform": "0.0.1"
+  }
+}
