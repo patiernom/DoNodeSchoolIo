@@ -56,5 +56,3 @@ class TodoForm extends React.Component {
       );
   }
 }
-
-asdasd
