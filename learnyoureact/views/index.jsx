@@ -16,7 +16,7 @@ class TodoList extends React.Component {
     render() {
         return (
             <div className="todoList">
-                <table style={{border: '2px solid black'}}>
+                <table style={style.table}>
                     <tbody>
                     <Todo title="Shopping">Milk</Todo>
                     <Todo title="Hair cut">13:00</Todo>
@@ -38,17 +38,17 @@ class Todo extends React.Component {
   render() {
       return (
         <tr>
-          <td style={{border: "1px solid black"}}>
+          <td style={style.tableContent}>
             <input type="checkbox" checked={this.state.checked} onChange={this.handleChange.bind(this)}/>
           </td>
-          <td style={{border: '1px solid black'}}>{this.props.title}</td>
-          <td style={{border:'1px solid black'}}>{this.props.children}</td>
+          <td style={style.tableContent}>{this.props.title}</td>
+          <td style={style.tableContent}>{this.props.children}</td>
         </tr>
       );
   }
 
   handleChange(e) {
-    this.setState({checked: true});
+    this.setState({checked: e.target.checked});
   }
 }
 
@@ -65,3 +65,12 @@ class TodoForm extends React.Component {
       );
   }
 }
+
+let style = {
+    table: {
+      border: '2px solid black'
+    },
+    tableContent: {
+        border: '1px solid black'
+    }
+};
