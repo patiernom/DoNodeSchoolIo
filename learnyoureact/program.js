@@ -28,7 +28,8 @@ app.set('views', __dirname + '/views');
 app.engine('jsx', require('express-react-views').createEngine({ transformViews: false }));
 
 require('babel/register')({
-    ignore: false
+    ignore: false,
+    compact: false
 });
 
 var TodoBox = require('./views/index.jsx');
@@ -50,17 +51,17 @@ app.use('/', function(req, res) {
     var initialData = JSON.stringify(data),
         markup = ReactDOMServer.renderToString(React.createElement(TodoBox, {data: data})),
         html = ReactDOMServer.renderToStaticMarkup(body(null,
-        div({id: 'app', dangerouslySetInnerHTML: {__html: markup}}),
-        script({
+          div({id: 'app', dangerouslySetInnerHTML: {__html: markup}}),
+          script({
             id: 'initial-data',
             type: 'text/plain',
             'data-json': initialData
-        }),
-        script({src: '/bundle.js'})
-    ));
+          }),
+          script({src: '/bundle.js'})
+        ));
 
     res.setHeader('Content-Type', 'text/html');
-    res.end(html);
+    res.end(html); //'<!DOCTYPE html>' + html
 });
 
 app.listen(app.get('port'), function() {});
