@@ -1,6 +1,14 @@
 "use strict";
 
 var express = require('express'),
+    React = require('react'),
+    ReactDOMServer = require('react-dom/server'),
+    DOM = React.DOM,
+    body = DOM.body,
+    div = DOM.div,
+    script = DOM.script,
+    browserify = require('browserify'),
+    babelify = require("babelify"),
     commands = process.argv,
     app = express(),
     data = [
@@ -23,8 +31,36 @@ require('babel/register')({
     ignore: false
 });
 
+var TodoBox = require('./views/index.jsx');
+
+app.use('/bundle.js', function (req, res) {
+    res.setHeader('content-type', 'application/javascript');
+
+    browserify({ debug: true })
+        .transform(babelify.configure({
+            presets: ["react", "es2015"],
+            compact: false
+        }))
+        .require("./app.js", { entry: true })
+        .bundle()
+        .pipe(res);
+});
+
 app.use('/', function(req, res) {
-  res.render('index', {data: data});
+    var initialData = JSON.stringify(data),
+        markup = ReactDOMServer.renderToString(React.createElement(TodoBox, {data: data})),
+        html = ReactDOMServer.renderToStaticMarkup(body(null,
+        div({id: 'app', dangerouslySetInnerHTML: {__html: markup}}),
+        script({
+            id: 'initial-data',
+            type: 'text/plain',
+            'data-json': initialData
+        }),
+        script({src: '/bundle.js'})
+    ));
+
+    res.setHeader('Content-Type', 'text/html');
+    res.end(html);
 });
 
 app.listen(app.get('port'), function() {});
