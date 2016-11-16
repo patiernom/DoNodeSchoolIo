@@ -23,6 +23,23 @@ class TodoList extends React.Component {
         this.changeTitle = this.changeTitle.bind(this);
         this.changeDetail = this.changeDetail.bind(this);
         this.addTodo = this.addTodo.bind(this);
+        this.removeTodo = this.removeTodo.bind(this);
+    }
+
+    removeTodo(key) {
+      var todos = this.state.data,
+          isDeleted = function(todo) {
+            return todo.title !== key;
+          };
+
+      this.setState(
+        {
+          data: todos.filter(isDeleted)
+        },
+        function () {
+          console.dir('removeTodo: ' + this.state.data);
+        }
+      );
     }
 
     changeTitle(e) {
@@ -60,7 +77,13 @@ class TodoList extends React.Component {
     }
 
     render() {
-        var todo = this.props.data.map(function(obj) { return <Todo title={obj.title} key={obj.title}>{obj.detail}</Todo>});
+        var that = this,
+            createTodo = function(obj) {
+              console.dir(obj);
+              return <Todo onDelete={that.removeTodo} title={obj.title} key={obj.title}>{obj.detail}</Todo>
+            },
+            todo = this.state.data.map(createTodo, that);
+
         return (
             <div className="todoList">
               <div>
@@ -83,13 +106,16 @@ class Todo extends React.Component {
     super(props);
 
     this.handleChange = this.handleChange.bind(this);
+    this._onDelete = this._onDelete.bind(this);
     this.state = {checked: false}
   }
 
   render() {
       var rowContent = this.state.checked ? style.checkedTodo : style.notCheckedTodo;
+
       return (
         <tr style={rowContent}>
+          <td style={style.tableContent}><button onClick={this._onDelete}>X</button></td>
           <td style={style.tableContent}>
             <input type="checkbox" checked={this.state.checked} onChange={this.handleChange}/>
           </td>
@@ -97,6 +123,10 @@ class Todo extends React.Component {
           <td style={style.tableContent}>{this.props.children}</td>
         </tr>
       );
+  }
+
+  _onDelete() {
+    this.props.onDelete(this.props.title);
   }
 
   handleChange(e) {
